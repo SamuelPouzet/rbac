@@ -1,0 +1,21 @@
+{
+    "name": "samuelpouzet/rbac",
+    "description": "Rbac module for Laminas",
+    "type": "module",
+    "require": {
+        "samuelpouzet/auth": "^1.0",
+        "laminas/laminas-permissions-rbac": "^3.7"
+    },
+    "license": "LGPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Samuelpouzet\\Rbac\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Samuel POUZET",
+            "email": "samuel.pouzet@yahoo.fr"
+        }
+    ]
+}
