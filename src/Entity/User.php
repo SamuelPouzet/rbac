@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use SamuelPouzet\Auth\Entity\AbstractEntity;
 use SamuelPouzet\Auth\Enumerations\UserStatusEnum;
 use SamuelPouzet\Auth\Interface\UserInterface;
+use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'user')]
@@ -36,11 +37,10 @@ class User extends AbstractEntity implements UserInterface
     #[ORM\Column(name: 'token', type: 'string', length: 200, nullable: false)]
     protected ?string $token = null;
 
-    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: RoleInterface::class, inversedBy: 'users')]
     #[ORM\JoinTable(name: 'user_role')]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "role_id", referencedColumnName: "id")]
-    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
     private Collection $roles;
 
     /**

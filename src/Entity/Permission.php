@@ -5,10 +5,12 @@ namespace SamuelPouzet\Rbac\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use SamuelPouzet\Rbac\Interface\Entities\PermissionInterface;
+use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'permission')]
-class Permission
+class Permission implements PermissionInterface
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true, 'notnull' => true])]
@@ -24,7 +26,7 @@ class Permission
     #[ORM\Column(name: 'date_created', type: \DateTimeImmutable::class, options: ['nullable' => false])]
     protected \DateTimeImmutable $dateCreated;
 
-    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'roles')]
+    #[ORM\ManyToMany(targetEntity: RoleInterface::class, mappedBy: 'roles')]
     private Collection $roles;
 
     /**

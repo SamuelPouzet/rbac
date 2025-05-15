@@ -5,10 +5,12 @@ namespace SamuelPouzet\Rbac\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use SamuelPouzet\Rbac\Interface\Entities\PermissionInterface;
+use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'role')]
-class Role
+class Role implements RoleInterface
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true, 'notnull' => true])]
@@ -24,20 +26,20 @@ class Role
     #[ORM\Column(name: 'date_created', type: \DateTimeImmutable::class, options: ['nullable' => false])]
     protected \DateTimeImmutable $dateCreated;
 
-    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'role')]
+    #[ORM\ManyToMany(targetEntity: RoleInterface::class, inversedBy: 'role')]
     #[ORM\JoinTable(name: 'role_hierarchy', joinColumns: [])]
     #[ORM\JoinColumn(name: "child_role_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "parent_role_id", referencedColumnName: "id")]
     private Collection $parentRoles;
 
-    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'role')]
+    #[ORM\ManyToMany(targetEntity: RoleInterface::class, inversedBy: 'role')]
     #[ORM\JoinTable(name: 'role_hierarchy', joinColumns: [])]
     #[ORM\JoinColumn(name: "parent_role_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "child_role_id", referencedColumnName: "id")]
     protected Collection $childRoles;
 
 
-    #[ORM\ManyToMany(targetEntity: Permission::class, inversedBy: 'roles')]
+    #[ORM\ManyToMany(targetEntity: PermissionInterface::class, inversedBy: 'roles')]
     #[ORM\JoinTable(name: 'role_permission', joinColumns: [])]
     #[ORM\JoinColumn(name: "role_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "permission_id", referencedColumnName: "id")]
