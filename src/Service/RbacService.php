@@ -71,16 +71,17 @@ class RbacService
 
         $roles = $user->getRoles();
         foreach ($roles as $role) {
-//            if ($this->rbac->isGranted($role->getName(), $permission)) {
-
-//                if ($params==null)
-//                    return true;
+            if ($this->rbac->isGranted($role->getName(), $permission)) {
+                if ($params === null) {
+                    return true;
+                }
 
 //                foreach ($this->assertionManagers as $assertionManager) {
-//                    if ($assertionManager->assert($this->rbac, $permission, $params))
+//                    if ($assertionManager->assert($this->rbac, $permission, $params)){
 //                        return true;
+//                    }
 //                }
-//            }
+            }
 
             $parentRoles = $role->getParentRoles();
             foreach ($parentRoles as $parentRole) {

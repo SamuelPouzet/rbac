@@ -5,9 +5,18 @@ namespace SamuelPouzet\Rbac\Service;
 use Laminas\Router\RouteMatch;
 use SamuelPouzet\Auth\Enumerations\AuthStatusEnum;
 use SamuelPouzet\Auth\Result\AuthResult;
+use SamuelPouzet\Auth\Service\IdentityService;
 
 class AuthService extends \SamuelPouzet\Auth\Service\AuthService
 {
+    public function __construct(
+        protected RbacService $rbacService,
+        protected array $config,
+        protected IdentityService $identityService
+    ) {
+        parent::__construct($this->config, $this->identityService);
+    }
+
     protected function grantAccess(string $controller, ?RouteMatch $routeMatch): AuthResult
     {
         $permissive = (bool)$this->config['permissive'] ?? false;

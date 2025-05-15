@@ -5,12 +5,13 @@ namespace SamuelPouzet\Rbac\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use SamuelPouzet\Auth\Entity\AbstractEntity;
 use SamuelPouzet\Rbac\Interface\Entities\PermissionInterface;
 use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'permission')]
-class Permission implements PermissionInterface
+class Permission extends AbstractEntity implements PermissionInterface
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true, 'notnull' => true])]
