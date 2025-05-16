@@ -43,6 +43,10 @@ class AuthService extends \SamuelPouzet\Auth\Service\AuthService
 
         $account = $this->identityService->getUser();
 
+        if ($configuration === '@') {
+            return new AuthResult(AuthStatusEnum::GRANTED, null, 'Allowed to all connections');
+        }
+
         $users = $configuration['users'] ?? [];
         if (in_array($account->getLogin(), $users)) {
             //allowed for this user

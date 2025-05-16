@@ -33,9 +33,16 @@ class AuthListener
         try {
             $authService = $event->getApplication()->getServiceManager()->get(AuthService::class);
             $result = $authService->authenticate($event);
-var_dump($result);
-            if ($result->getStatus() !== AuthStatusEnum::GRANTED) {
-                $this->redirectToLogin($event);
+
+            switch ($result->getStatus()) {
+                case AuthStatusEnum::DENIED:
+                    $this->redirectToNotAllowed($event);
+                    break;
+                case AuthStatusEnum::USER_REQUIRED:
+                    $this->redirectToLogin($event);
+                    break;
+                default:
+                    break;
             }
         } catch (Exception $exception) {
             die($exception->getMessage());
@@ -43,6 +50,12 @@ var_dump($result);
     }
 
     protected function redirectToLogin(MvcEvent $event): void
+    {
+        $event->getRouteMatch()?->setParam('controller', LoginController::class);
+        $event->getRouteMatch()?->setParam('action', 'index');
+    }
+
+    protected function redirectToNotAllowed(MvcEvent $event): void
     {
         $event->getRouteMatch()?->setParam('controller', LoginController::class);
         $event->getRouteMatch()?->setParam('action', 'index');
