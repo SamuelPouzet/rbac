@@ -9,6 +9,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use SamuelPouzet\Auth\Enumerations\AuthStatusEnum;
 use SamuelPouzet\Rbac\Service\AuthService;
+use Exception;
 
 class AuthListener
 {
@@ -32,18 +33,18 @@ class AuthListener
         try {
             $authService = $event->getApplication()->getServiceManager()->get(AuthService::class);
             $result = $authService->authenticate($event);
-
+var_dump($result);
             if ($result->getStatus() !== AuthStatusEnum::GRANTED) {
                 $this->redirectToLogin($event);
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             die($exception->getMessage());
         }
     }
 
     protected function redirectToLogin(MvcEvent $event): void
     {
-        $event->getRouteMatch()->setParam('controller', LoginController::class);
-        $event->getRouteMatch()->setParam('action', 'index');
+        $event->getRouteMatch()?->setParam('controller', LoginController::class);
+        $event->getRouteMatch()?->setParam('action', 'index');
     }
 }

@@ -12,7 +12,7 @@ use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
 
 class RbacService
 {
-    protected Rbac $rbac;
+    protected ?Rbac $rbac = null;
 
     public function __construct(
         protected StorageInterface $cache,
@@ -36,7 +36,7 @@ class RbacService
         if (! $result) {
             $this->rbac = new Rbac();
             $roles = $this->entityManager->getRepository(RoleInterface::class)
-                ->findBy(['status' => UserStatusEnum::ACTIVE], ['id' => 'ASC']);
+                ->findBy([], ['id' => 'ASC']);
 
             foreach ($roles as $role) {
                 $roleName = $role->getName();

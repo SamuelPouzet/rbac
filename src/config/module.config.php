@@ -1,4 +1,5 @@
 <?php
+
 namespace Samuelpouzet\Module;
 
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
@@ -19,7 +20,38 @@ use SamuelPouzet\Rbac\Service\RbacService;
 
 return [
     'samuelpouzet' => [
-
+        'auth' => [
+            'default_user' => [
+                'login' => 'admin',
+                'password' => 'Secur1ty!',
+                'email' => 'admin@exemple.com',
+                'role' => 'role.admin',
+            ],
+            'default_roles' => [
+                [
+                    'name' => 'Admin',
+                    'code' => 'role.admin',
+                    'description' => 'Administrator',
+                ],
+                [
+                    'name' => 'Guest',
+                    'code' => 'role.guest',
+                    'description' => 'Guest',
+                ],
+            ],
+            'default_permissions' => [
+                [
+                    'name' => 'Manage users',
+                    'code' => 'permission.manage.user',
+                    'description' => 'Permission to manage users',
+                ],
+                [
+                    'name' => 'View',
+                    'code' => 'permission.view',
+                    'description' => 'Permission to view page',
+                ],
+            ],
+        ],
     ],
     'service_manager' => [
         'factories' => [

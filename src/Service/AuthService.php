@@ -24,7 +24,10 @@ class AuthService extends \SamuelPouzet\Auth\Service\AuthService
 
         $configuration = $this->config['access_filter'][$controller][$action] ?? null;
 
-        if (! $configuration && ! $permissive) {
+        if (! $configuration) {
+            if ($permissive) {
+                return new AuthResult(AuthStatusEnum::GRANTED, null, 'Access by permissive configuration');
+            }
             // no config found and permission is restrictive, no access
             return new AuthResult(AuthStatusEnum::USER_REQUIRED, null);
         }
@@ -34,9 +37,29 @@ class AuthService extends \SamuelPouzet\Auth\Service\AuthService
             return new AuthResult(AuthStatusEnum::GRANTED, null, 'Allowed to everyone');
         }
 
-        if ($this->identityService->hasUser()) {
-            return new AuthResult(AuthStatusEnum::GRANTED, null, 'User is connected');
+        if (! $this->identityService->hasUser()) {
+            return new AuthResult(AuthStatusEnum::USER_REQUIRED, null, 'needs connexion');
         }
-        return new AuthResult(AuthStatusEnum::USER_REQUIRED, null, 'needs connexion');
+
+        $account = $this->identityService->getUser();
+
+        $users = $configuration['users'] ?? [];
+        if (in_array($account->getLogin(), $users)) {
+            //allowed for this user
+            return new AuthResult(
+                AuthStatusEnum::GRANTED,
+                $this->identityService->getUser(),
+                'Allowed to this user specially'
+            );
+        }
+
+        $permissions = $configuration['permissions'] ?? [];
+        foreach ($permissions as $permission) {
+            if ($this->rbacService->isGranted(null, $permission)) {
+                return new AuthResult(AuthStatusEnum::GRANTED, null, $permission);
+            }
+        }
+
+        return new AuthResult(AuthStatusEnum::DENIED, null, 'Access denied to this user');
     }
 }
