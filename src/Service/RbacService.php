@@ -5,7 +5,6 @@ namespace SamuelPouzet\Rbac\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Permissions\Rbac\Rbac;
-use SamuelPouzet\Auth\Enumerations\UserStatusEnum;
 use SamuelPouzet\Auth\Interface\UserInterface;
 use SamuelPouzet\Auth\Service\IdentityService;
 use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
@@ -23,7 +22,7 @@ class RbacService
 
     public function init(bool $force = false): void
     {
-        if (! ! $this->rbac && ! $force) {
+        if (!! $this->rbac && ! $force) {
             return;
         }
 

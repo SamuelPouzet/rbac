@@ -13,10 +13,14 @@ use SamuelPouzet\Auth\Listener\AuthListener;
 use SamuelPouzet\Rbac\Interface\Entities\PermissionInterface;
 use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
 use SamuelPouzet\Rbac\Listener\Factory\AuthListenerFactory;
+use SamuelPouzet\Rbac\Plugin\AccessFilterPlugin;
+use SamuelPouzet\Rbac\Plugin\Factory\AccessFilterPluginFactory;
 use SamuelPouzet\Rbac\Service\AuthService;
 use SamuelPouzet\Rbac\Service\Factory\AuthServiceFactory;
 use SamuelPouzet\Rbac\Service\Factory\RbacServiceFactory;
 use SamuelPouzet\Rbac\Service\RbacService;
+use SamuelPouzet\Rbac\View\AccessFilterHelper;
+use SamuelPouzet\Rbac\View\Factory\AccessFilterHelperFactory;
 
 return [
     'samuelpouzet' => [
@@ -53,6 +57,14 @@ return [
             ],
         ],
     ],
+    'controller_plugins' => [
+        'factories' => [
+            AccessFilterPlugin::class => AccessFilterPluginFactory::class,
+        ],
+        'aliases' => [
+            'isGranted' => AccessFilterPlugin::class,
+        ]
+    ],
     'service_manager' => [
         'factories' => [
             //listeners
@@ -84,6 +96,14 @@ return [
                 ]
             ],
         ],
+    ],
+    'view_helpers' => [
+        'factories' => [
+            AccessFilterHelper::class => AccessFilterHelperFactory::class,
+        ],
+        'aliases' => [
+            'isGranted' => AccessFilterHelper::class,
+        ]
     ],
     'caches' => [
         'default-cache' => [
