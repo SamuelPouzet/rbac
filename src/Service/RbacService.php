@@ -5,6 +5,7 @@ namespace SamuelPouzet\Rbac\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Permissions\Rbac\Rbac;
+use Laminas\Permissions\Rbac\Role;
 use SamuelPouzet\Auth\Interface\UserInterface;
 use SamuelPouzet\Auth\Service\IdentityService;
 use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
@@ -22,7 +23,7 @@ class RbacService
 
     public function init(bool $force = false): void
     {
-        if (!! $this->rbac && ! $force) {
+        if (! ! $this->rbac && ! $force) {
             return;
         }
 
@@ -38,21 +39,10 @@ class RbacService
                 ->findBy([], ['id' => 'ASC']);
 
             foreach ($roles as $role) {
-                $roleName = $role->getName();
-
-                $parentRoleNames = [];
-                foreach ($role->getParentRoles() as $parentRole) {
-                    $parentRoleNames[] = $parentRole->getName();
-                }
-
-                $this->rbac->addRole($roleName, $parentRoleNames);
-
-                foreach ($role->getPermissions() as $permission) {
-                    $this->rbac->getRole($roleName)->addPermission($permission->getName());
-                }
+                    $this->createRole($role);
             }
-            $this->cache->setItem('rbac_container', $this->rbac);
         }
+        $this->cache->setItem('rbac_container', $this->rbac);
     }
 
     public function isGranted(?UserInterface $user, string $permission, ?array $params = null): bool
@@ -81,14 +71,26 @@ class RbacService
 //                    }
 //                }
             }
-
-            $parentRoles = $role->getParentRoles();
-            foreach ($parentRoles as $parentRole) {
-                if ($this->rbac->isGranted($parentRole->getName(), $permission)) {
-                    return true;
-                }
-            }
         }
         return false;
+    }
+
+
+    protected function createRole(RoleInterface $role): void
+    {
+        if ($this->rbac->hasRole($role->getName())) {
+            return;
+        }
+        $rbacRole = new Role($role->getName());
+        foreach ($role->getParentRoles() as $parentRole) {
+            if (! $this->rbac->hasRole($parentRole->getName())) {
+                $this->createRole($parentRole);
+            }
+            $rbacRole->addParent($this->rbac->getRole($parentRole->getName()));
+        }
+        foreach ($role->getPermissions() as $permission) {
+            $rbacRole->addPermission($permission->getName());
+        }
+        $this->rbac->addRole($rbacRole);
     }
 }
