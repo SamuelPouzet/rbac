@@ -21,23 +21,20 @@ class Role extends AbstractEntity implements RoleInterface
     #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'code', type: 'string', length: 200, nullable: false)]
-    protected string $code;
-
     #[ORM\Column(name: 'description', type: 'string', length: 200, nullable: false)]
     protected string $description;
 
     #[ORM\Column(name: 'date_created', type: 'datetime_immutable', options: ['nullable' => false])]
     protected \DateTimeImmutable $dateCreated;
 
-    #[ORM\ManyToMany(targetEntity: RoleInterface::class, inversedBy: 'role')]
-    #[ORM\JoinTable(name: 'role_hierarchy', joinColumns: [])]
+    #[ORM\ManyToMany(targetEntity: RoleInterface::class)]
+    #[ORM\JoinTable(name: 'role_hierarchy')]
     #[ORM\JoinColumn(name: "child_role_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "parent_role_id", referencedColumnName: "id")]
     private Collection $parentRoles;
 
-    #[ORM\ManyToMany(targetEntity: RoleInterface::class, inversedBy: 'role')]
-    #[ORM\JoinTable(name: 'role_hierarchy', joinColumns: [])]
+    #[ORM\ManyToMany(targetEntity: RoleInterface::class)]
+    #[ORM\JoinTable(name: 'role_hierarchy')]
     #[ORM\JoinColumn(name: "parent_role_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "child_role_id", referencedColumnName: "id")]
     protected Collection $childRoles;
@@ -78,17 +75,6 @@ class Role extends AbstractEntity implements RoleInterface
     public function setName(string $name): static
     {
         $this->name = $name;
-        return $this;
-    }
-
-    public function getCode(): string
-    {
-        return $this->code;
-    }
-
-    public function setCode(string $code): static
-    {
-        $this->code = $code;
         return $this;
     }
 

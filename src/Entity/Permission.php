@@ -21,9 +21,6 @@ class Permission extends AbstractEntity implements PermissionInterface
     #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: false)]
     protected string $name;
 
-    #[ORM\Column(name: 'code', type: 'string', length: 200, nullable: false)]
-    protected string $code;
-
     #[ORM\Column(name: 'description', type: 'string', length: 200, nullable: false)]
     protected string $description;
 
@@ -60,17 +57,6 @@ class Permission extends AbstractEntity implements PermissionInterface
     public function setName(string $name): static
     {
         $this->name = $name;
-        return $this;
-    }
-
-    public function getCode(): string
-    {
-        return $this->code;
-    }
-
-    public function setCode(string $code): static
-    {
-        $this->code = $code;
         return $this;
     }
 

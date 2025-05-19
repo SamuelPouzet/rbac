@@ -5,11 +5,17 @@ namespace Samuelpouzet\Module;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Laminas\Cache\Storage\Adapter\Filesystem;
 use Laminas\Cache\Storage\Plugin\Serializer;
+use SamuelPouzet\Rbac\Form\UpdateRoleForm;
+use SamuelPouzet\Rbac\Interface\Entities\UpdateRoleInterface;
+use SamuelPouzet\Rbac\Manager\Factory\RoleManagerFactory;
+use SamuelPouzet\Rbac\Manager\RoleManager;
 use SamuelPouzet\Rbac\Entity\Permission;
 use SamuelPouzet\Rbac\Entity\Role;
 use SamuelPouzet\Rbac\Entity\User;
 use SamuelPouzet\Auth\Interface\UserInterface;
 use SamuelPouzet\Auth\Listener\AuthListener;
+use SamuelPouzet\Rbac\Form\NewRoleForm;
+use SamuelPouzet\Rbac\Interface\Entities\NewRoleInterface;
 use SamuelPouzet\Rbac\Interface\Entities\PermissionInterface;
 use SamuelPouzet\Rbac\Interface\Entities\RoleInterface;
 use SamuelPouzet\Rbac\Listener\Factory\AuthListenerFactory;
@@ -24,6 +30,10 @@ use SamuelPouzet\Rbac\View\Factory\AccessFilterHelperFactory;
 
 return [
     'samuelpouzet' => [
+        'form_resolver' => [
+            NewRoleInterface::class => NewRoleForm::class,
+            UpdateRoleInterface::class => UpdateRoleForm::class,
+        ],
         'auth' => [
             'default_user' => [
                 'login' => 'admin',
@@ -69,6 +79,8 @@ return [
         'factories' => [
             //listeners
             AuthListener::class => AuthListenerFactory::class,
+            //managers
+            RoleManager::class => RoleManagerFactory::class,
             //services
             AuthService::class => AuthServiceFactory::class,
             RbacService::class => RbacServiceFactory::class,
